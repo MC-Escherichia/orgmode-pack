@@ -31,7 +31,7 @@
 
 (column-number-mode)
 
-(setq org-directory "~/org")
+(setq org-directory "~/Dropbox/org")
 (setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" 'nosort))
 
 (setq org-startup-indented t)
