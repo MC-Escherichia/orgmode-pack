@@ -8,7 +8,9 @@
 (install-packages-pack/install-packs '(org
                                        ac-math
                                        smartscan
-                                       toc-org))
+                                       toc-org
+                                       ;; org-trello
+                                       ))
 (require 'ert)
 (eval-after-load "toc-org-autoloads"
   '(progn
@@ -62,7 +64,7 @@
 
 ;; keywords sequence for org-mode
 (setq org-todo-keywords
-   '((sequence "TODO(t)" "IN-PROGRESS(i)" "PENDING(p)" "|"  "DONE(d)" "FAILED(f)" "DELEGATED(e)" "CANCELLED(c)")))
+      '((sequence "TODO(t)" "IN-PROGRESS(i)" "PENDING(p)" "|"  "DONE(d)" "FAILED(f)" "DELEGATED(e)" "CANCELLED(c)")))
 
 ;; modifying the colonr for the different keywords
 (setq org-todo-keyword-faces
@@ -93,11 +95,11 @@
 (setq org-fontify-done-headline t)
 (custom-set-faces
  '(org-done ((t (:foreground "PaleGreen"
-                 :weight normal
-                 :strike-through t))))
+                             :weight normal
+                             :strike-through t))))
  '(org-headline-done
-            ((((class color) (min-colors 16) (background dark))
-              (:foreground "LightSalmon" :strike-through t)))))
+   ((((class color) (min-colors 16) (background dark))
+     (:foreground "LightSalmon" :strike-through t)))))
 
 ;; Be able to reactivate the touchpad for an export html (as my touchpad is deactivated when in emacs)
 
@@ -179,7 +181,12 @@ ACTIVATE."
   (add-hook 'org-trello-mode-hook (lambda ()
                                     (let ((prefix-binding "C-c z"))
                                       (orgtrello-setup/install-local-prefix-mode-keybinding! prefix-binding)
-                                      (define-key org-trello-mode-map (kbd (format "%s%s" prefix-binding " r")) 'org-trello/dev-load-namespaces)))))
+                                      (define-key org-trello-mode-map (kbd (format "%s%s" prefix-binding " r")) 'org-trello/dev-load-namespaces))))
+  (custom-set-variables '(org-trello-files
+                          (directory-files (file-name-directory "/home/matt/Dropbox/org/gtd/") 't ".*\.org"))))
+
+
+
 
 (provide 'orgmode-pack)
 ;;; orgmode-pack ends here
