@@ -8,9 +8,8 @@
 (install-packages-pack/install-packs '(org
                                        ac-math
                                        smartscan
-                                       toc-org
-                                       ;; org-trello
-                                       ))
+                                       toc-org))
+
 (require 'ert)
 (eval-after-load "toc-org-autoloads"
   '(progn
