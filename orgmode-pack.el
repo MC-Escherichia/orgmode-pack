@@ -77,19 +77,20 @@
 
 ;; babel
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((haskell    . t)
-   (emacs-lisp . t)
-   (sh         . t)
-   (clojure    . t)
-   (java       . t)
-   (ruby       . t)
-   (perl       . t)
-   (python     . t)
-   (R          . t)
-   (ditaa      . t)
-   (lilypond   . t)))
+
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((haskell    . t)
+;;    (emacs-lisp . t)
+;;    (sh         . t)
+;;    (clojure    . t)
+;;    (java       . t)
+;;    (ruby       . t)
+;;    (perl       . t)
+;;    (python     . t)
+;;    (R          . t)
+;;    (ditaa      . t)
+;;    (lilypond   . t)))
 
 (setq org-fontify-done-headline t)
 (custom-set-faces
