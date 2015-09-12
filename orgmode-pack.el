@@ -41,6 +41,14 @@
 
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
+(define-key global-map "\C-cc" 'org-capture)
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (concat org-directory  "/gtd/gtd.org") "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org"))
+         "* %?\nEntered on %U\n  %i\n  %a")))
+
 ;; export options
 (setq org-export-with-toc t)
 (setq org-export-headline-levels 4)
@@ -77,20 +85,21 @@
 
 ;; babel
 
-
-;; (org-babel-do-load-languages
-;;  'org-babel-load-languages
-;;  '((haskell    . t)
-;;    (emacs-lisp . t)
-;;    (sh         . t)
-;;    (clojure    . t)
-;;    (java       . t)
-;;    (ruby       . t)
-;;    (perl       . t)
-;;    (python     . t)
-;;    (R          . t)
-;;    (ditaa      . t)
-;;    (lilypond   . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(;; (haskell    . t)
+   (emacs-lisp . t)
+   (sh         . t)
+   (clojure    . t)
+   ;; (java       . t)
+   ;; (ruby       . t)
+   ;; (perl       . t)
+   ;; (python     . t)
+   ;; (R          . t)
+   (ditaa      . t)
+   (latex      . t)
+   ;; (lilypond   . t)
+   ))
 
 (setq org-fontify-done-headline t)
 (custom-set-faces
@@ -149,6 +158,14 @@ ACTIVATE."
 
 (add-hook 'org-mode-hook 'ac-latex-mode-setup)
 
+;;; ox-latex
+(defun org-export-latex-no-toc (depth)
+  (when depth
+    (format "%% Org-mode is exporting headings to %s levels.\n"
+            depth)))
+(setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
+
+
 (add-hook 'org-mode-hook
           (lambda ()
             (global-unset-key (kbd "C-c o"))
@@ -180,13 +197,13 @@ ACTIVATE."
 (when (require 'org-trello nil t)
   (add-hook 'org-trello-mode-hook (lambda ()
                                     (let ((prefix-binding "C-c z"))
-                                      (orgtrello-setup/install-local-prefix-mode-keybinding! prefix-binding)
+
+                                      (orgtrello-setup-install-local-prefix-mode-keybinding prefix-binding)
                                       (define-key org-trello-mode-map (kbd (format "%s%s" prefix-binding " r")) 'org-trello/dev-load-namespaces))))
   (custom-set-variables '(org-trello-files
                           (directory-files (file-name-directory "/home/matt/Dropbox/org/gtd/") 't ".*\.org"))))
 
 
-
+(add-hook 'org-capture-mode-hook 'visual-line-mode)
 
 (provide 'orgmode-pack)
-;;; orgmode-pack ends here
