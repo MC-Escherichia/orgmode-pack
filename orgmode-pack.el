@@ -41,13 +41,13 @@
 
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
-(define-key global-map "\C-cc" 'org-capture)
-
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline (concat org-directory  "/gtd/gtd.org") "Tasks")
-         "* TODO %?\n  %i\n  %a")
+      '(("t" "Todo" entry (file (concat org-directory  "/gtd/gtd.org") )
+         "* TODO %?\n  %i\n  %a" :prepend t)
         ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org"))
          "* %?\nEntered on %U\n  %i\n  %a")))
+
+(define-key global-map "\C-cc" 'org-capture)
 
 ;; export options
 (setq org-export-with-toc t)
