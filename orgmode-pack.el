@@ -33,7 +33,7 @@
 (column-number-mode)
 
 (setq org-directory "~/Dropbox/org")
-(setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" 'nosort))
+(setq org-agenda-files (directory-files (s-append "/gtd/" org-directory) 'absolute-names ".[^\#].org$" 'nosort))
 
 (setq org-startup-indented t)
 
@@ -204,7 +204,6 @@ ACTIVATE."
                           (directory-files (file-name-directory "/home/matt/Dropbox/org/gtd/") 't ".*\.org"))))
 
 
-(add-hook 'org-capture-mode-hook 'visual-line-mode)
 (require 'hydra)
 (defhydra hydra-org-template (:color blue :hint nil)
   "
@@ -241,5 +240,14 @@ _h_tml    ^ ^        _A_SCII:
         (hydra-org-template/body)
       (self-insert-command 1))))
 
+
+(set 'org-src-fontify-natively t)
+
+(add-hook 'org-capture-mode-hook
+          (lambda ()
+            (auto-fill-mode)
+            (writeroom-mode 1)
+            (visual-line-mode)
+            (company-mode 0)))
 
 (provide 'orgmode-pack)
