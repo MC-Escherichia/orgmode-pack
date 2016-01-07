@@ -251,3 +251,6 @@ _h_tml    ^ ^        _A_SCII:
             (company-mode 0)))
 
 (provide 'orgmode-pack)
+
+(org-babel-lob-ingest "./mfc_lob.org")
+

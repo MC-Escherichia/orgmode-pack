@@ -1,0 +1,48 @@
+#+NAME: table_functions
+#+BEGIN_SRC emacs-lisp :exports none :results output silent
+
+    (defun mil-time-info (time)
+      (let ((rgex-match (s-match "\\([[:digit:]]+\\):\\([[:digit:]]+\\)" time)))
+        (if (not (= 3 (length rgex-match)))
+            (error "invalid entry")
+          (let ((hr (string-to-number (second rgex-match)))
+                (mn (string-to-number (third rgex-match))))
+            ;; return string in normal time, and decimal
+            (list
+             (cond ((= 0 hr) (s-concat "12:" (third rgex-match) " AM"))
+                   ((< hr 12) (s-concat (second rgex-match) ":" (third rgex-match) " AM"))
+                   ((< hr 13) (s-concat (second rgex-match) ":" (third rgex-match) " PM"))
+                   ('else (s-concat (number-to-string (- hr 12)) ":" (third rgex-match) " PM")))
+             (+ hr (/ mn 60.0)))))))
+
+    (defun ts-date (timestamp)
+      (s-join " " (reverse (cdr  (s-match
+                                  "2015-\\\(..-..\\\) \\\(...\\\)"
+                                  timestamp)))) )
+    (defun times (timestamp)
+      (cdr (s-match
+            "[[:space:]]\\\(..:..\\\)-\\\(..:..\\\)"
+            timestamp)))
+
+
+    (defun diff-hours (in out)
+      (let ((diff (- out in))))
+      (cond
+       ((< diff 0) (diff-hours in (+ out 24)))
+       ((> diff 24) (diff-hours in (+ out 24)))))
+
+
+    (defun hours-worked (timestamp)
+      (if (not (s-match "\\[[0-9|-]\\{10\\} ... [0-9|:|-]\\{11\\}\\]" timestamp))
+          ""
+        (let* ((inout (mapcar (lambda (x) (second  (mil-time-info x))) (times  timestamp)))
+               (in (first inout))
+               (out (second inout))
+               (diff (- out in)))
+          (if
+              (< diff 0)
+              (- (+ out 24) in)
+            diff))))
+
+
+#+END_SRC
