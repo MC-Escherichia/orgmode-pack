@@ -31,9 +31,14 @@
 (add-to-list 'auto-mode-alist '("\.note$" . org-mode))
 
 (column-number-mode)
+(require 'seq)
 
 (setq org-directory "~/Dropbox/org")
-(setq org-agenda-files (directory-files (s-append "/gtd/" org-directory) 'absolute-names ".[^\#].org$" 'nosort))
+(setq org-agenda-files (seq-filter
+                        (lambda (x) (string-match-p "gtd/[^\.\#]+\.org$"   x))
+                        (directory-files (s-append "/gtd/" org-directory) 'absolute-names "" 'nosort)))
+
+
 
 (setq org-startup-indented t)
 
@@ -84,13 +89,15 @@
         ("CANCELLED"   . shadow)))
 
 ;; babel
-
+(require 'ob)
 (org-babel-do-load-languages
  'org-babel-load-languages
- '(;; (haskell    . t)
+ '( ;; (haskell    . t)
    (emacs-lisp . t)
    (sh         . t)
    (clojure    . t)
+   (org . t)
+   (mongo . t)
    ;; (java       . t)
    ;; (ruby       . t)
    ;; (perl       . t)
@@ -100,6 +107,13 @@
    (latex      . t)
    ;; (lilypond   . t)
    ))
+
+(defun my-org-confirm-babel-evaluate (script-lang body)
+  (let ((trusted-langs '("ditaa" "mongo" "latex")))
+    (not (-some 'identity (mapc (lambda (lang) (string= script-lang lang))
+                                trusted-langs))))) ; don't ask for ditaa
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
 
 (setq org-fontify-done-headline t)
 (custom-set-faces
@@ -195,11 +209,6 @@ ACTIVATE."
             (and (fboundp 'whitespace-mode) (whitespace-mode -1))))
 
 (when (require 'org-trello nil t)
-  (add-hook 'org-trello-mode-hook (lambda ()
-                                    (let ((prefix-binding "C-c z"))
-
-                                      (orgtrello-setup-install-local-prefix-mode-keybinding prefix-binding)
-                                      (define-key org-trello-mode-map (kbd (format "%s%s" prefix-binding " r")) 'org-trello/dev-load-namespaces))))
   (custom-set-variables '(org-trello-files
                           (directory-files (file-name-directory "/home/matt/Dropbox/org/gtd/") 't ".*\.org"))))
 
@@ -250,7 +259,49 @@ _h_tml    ^ ^        _A_SCII:
             (visual-line-mode)
             (company-mode 0)))
 
-(provide 'orgmode-pack)
+;; ox-koma-letter
+(require 'ox-koma-letter)
+(add-to-list 'org-latex-classes
+             '("my-letter"
+               "\\documentclass\[DIV=15,fontsize=10pt,foldmarks=h,subject=untitled\]\{scrlttr2\}
+     \\usepackage[english]{babel}
+     \\setkomavar{frombank}{(1234)\\,567\\,890}
+     \[DEFAULT-PACKAGES]
+     \[PACKAGES]
+     \[EXTRA]") nil (lambda (e1 e2) (string= (car e1)
+                                        (car e2))))
+
+
+(setq org-koma-letter-default-class "my-letter")
+
+
+;; org latex
+(require 'ox-latex)
+(setq org-latex-listings t)
+(mapc
+ (lambda (e) (add-to-list 'org-latex-packages-alist e))
+ '(("" "longtable" t)
+   ("" "tabu" t)
+					;("AUTO" "babel" t)
+   ))
+
+
+
+(add-to-list 'org-latex-classes
+             '("koma-article"
+               "\\documentclass\[%
+               DIV=14
+               fontsize=10pt
+               subject=untitled\]{scrartcl}
+               [NO-DEFAULT-PACKAGES]
+               [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
 
 (org-babel-lob-ingest "./mfc_lob.org")
 
+(provide 'orgmode-pack)
