@@ -260,19 +260,19 @@ _h_tml    ^ ^        _A_SCII:
             (company-mode 0)))
 
 ;; ox-koma-letter
-(require 'ox-koma-letter)
-(add-to-list 'org-latex-classes
-             '("my-letter"
-               "\\documentclass\[DIV=15,fontsize=10pt,foldmarks=h,subject=untitled\]\{scrlttr2\}
-     \\usepackage[english]{babel}
-     \\setkomavar{frombank}{(1234)\\,567\\,890}
-     \[DEFAULT-PACKAGES]
-     \[PACKAGES]
-     \[EXTRA]") nil (lambda (e1 e2) (string= (car e1)
-                                        (car e2))))
 
-
-(setq org-koma-letter-default-class "my-letter")
+;; (add-to-list 'org-latex-classes
+;;              '("my-letter"
+;;                "\\documentclass\[DIV=15,fontsize=10pt,foldmarks=h,subject=untitled\]\{scrlttr2\}
+;;      \\usepackage[english]{babel}
+;;      \\setkomavar{frombank}{(1234)\\,567\\,890}
+;;      \[DEFAULT-PACKAGES]
+;;      \[PACKAGES]
+;;      \[EXTRA]") nil (lambda (e1 e2) (string= (car e1)
+;;                                         (car e2))))
+;;
+;;
+;; (setq org-koma-letter-default-class "my-letter")
 
 
 ;; org latex
