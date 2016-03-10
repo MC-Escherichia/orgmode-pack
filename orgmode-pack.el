@@ -105,6 +105,7 @@
    ;; (R          . t)
    (ditaa      . t)
    (latex      . t)
+   (ledger . t)
    ;; (lilypond   . t)
    ))
 
